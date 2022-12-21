@@ -40,11 +40,8 @@ app.post('/upload', upload.single('pdf'), (req, res, next) => {
     spawn('rm', [req.file.path])
 
     // remove converted files
-    spawn('rm', ['-r', filename])
+    //spawn('rm', ['-r', filename])
   })
-})
-
-app.get('/download', (res, req) => {
 })
 
 app.listen(port, () => {
