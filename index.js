@@ -11,15 +11,20 @@ const upload = multer({dest: 'uploads/'})
 
 const port = 3000
 
-app.use('/img', express.static('img'))
+app.use('/img', express.static('img', {
+  setHeaders: (res, filename, filestats) => {
+    const path = filename.split('/')
+    const id = path[path.length-2] // derive id from path
+    console.log(id)
+  }
+}))
 
 app.get('/', (req, res) => {
   res.send('up!')
 })
 
-app.get('/pdf/:file', (req, res) => {
-
-  res.send(req.params.file)
+app.get('/img/:id/*', (req, res) => {
+  console.log(req.params.id)
 })
 
 // load PDF from URL
