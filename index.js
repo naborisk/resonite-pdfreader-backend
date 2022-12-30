@@ -23,10 +23,6 @@ app.get('/', (req, res) => {
   res.send('up!')
 })
 
-app.get('/img/:id/*', (req, res) => {
-  console.log(req.params.id)
-})
-
 // load PDF from URL
 app.get('/load', (req, res) => {
   if(!req.query.url) res.send('no url provided')
