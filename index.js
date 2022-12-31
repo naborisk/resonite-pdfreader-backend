@@ -6,6 +6,7 @@ const multer = require('multer')
 const path = require('path')
 const {spawn} = require('node:child_process')
 const Downloader = require('nodejs-file-downloader')
+const j2e = require('json2emap')
 
 const upload = multer({dest: 'uploads/'})
 
@@ -55,11 +56,11 @@ app.get('/load', (req, res) => {
       const files = fs.readdirSync('img/' + fileName)
 
       // return file information used for download
-      res.json({
+      res.send(j2e({
         pageCount: files.length,
         path: fileName,
         files
-      })
+      }))
 
       console.log('files infortmation sent to client, cleaning up...')
 
@@ -90,11 +91,11 @@ app.post('/upload', upload.single('pdf'), (req, res, next) => {
     const files = fs.readdirSync('img/' + filename)
 
     // return file information used for download
-    res.json({
+    res.send(j2e({
       pageCount: files.length,
       path: filename,
       files
-    })
+    }))
 
     console.log('files infortmation sent to client, cleaning up...')
     // remove uploaded file
@@ -102,6 +103,13 @@ app.post('/upload', upload.single('pdf'), (req, res, next) => {
 
     // remove converted files
     //spawn('rm', ['-r', filename])
+  })
+})
+
+app.get('/clear', (req, res) => {
+  const rm = spawn('rm', ['-r', './img/*'], {shell: true})
+  rm.on('close', code => {
+    res.send('img cleared')
   })
 })
 
