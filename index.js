@@ -26,14 +26,10 @@ app.get('/', (req, res) => {
 
 const convertToPng = (filename) => {
   fs.mkdirSync('img/' + filename)
-  console.log('spawning pdftoppm')
   const pdftoppm = spawn('pdftoppm', [`./downloads/${filename}`, `./img/${filename}/out`, '-png'])
 
   return new Promise((resolve, reject) => {
     pdftoppm.on('close', (code) => {
-
-      console.log('pdftoppm process closed')
-
       const files = fs.readdirSync('img/' + filename)
 
       // return file information used for download
@@ -42,8 +38,6 @@ const convertToPng = (filename) => {
         path: filename,
         files
       })
-
-      console.log('files infortmation sent to client, cleaning up...')
 
       // remove uploaded file
       spawn('rm', [`./downloads/${filename}`])
@@ -66,16 +60,19 @@ app.get('/load', async (req, res) => {
   const url = req.query.url
   const filename = crypto.createHash('md5').update(req.query.url).digest('hex')
 
+  // return file data if exist
   if(fs.existsSync('./img/' + filename)) {
-      const files = fs.readdirSync('img/' + filename)
-      res.send({
-        pageCount: files.length,
-        path: filename,
-        files
-      })
+    console.log('cache found, sending to client')
+    const files = fs.readdirSync('img/' + filename)
+    res.send(j2e({
+      pageCount: files.length,
+      path: filename,
+      files
+    }))
     return
   }
 
+  // if not, then download, convert, and send
   const downloader = new Downloader({
     url,
     directory: './downloads',
@@ -89,9 +86,11 @@ app.get('/load', async (req, res) => {
   console.log('downloading to downloads/' + filename)
   await downloader.download()
 
-  const data = convertToPng(filename)
+  console.log('converting to pngs')
+  const data =  await convertToPng(filename)
 
   res.send(j2e(data))
+  console.log('files information sent to client')
 })
 
 // for uploading local PDF file
