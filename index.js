@@ -24,9 +24,9 @@ app.get('/', (req, res) => {
   res.send('up!')
 })
 
-const convertToPng = (filename) => {
+const convertToPng = (path, filename) => {
   fs.mkdirSync('img/' + filename)
-  const pdftoppm = spawn('pdftoppm', [`./downloads/${filename}`, `./img/${filename}/out`, '-png'])
+  const pdftoppm = spawn('pdftoppm', [path, `./img/${filename}/out`, '-png'])
 
   return new Promise((resolve, reject) => {
     pdftoppm.on('close', (code) => {
@@ -40,7 +40,7 @@ const convertToPng = (filename) => {
       })
 
       // remove uploaded file
-      spawn('rm', [`./downloads/${filename}`])
+      spawn('rm', [path])
 
       // remove converted files
       //spawn('rm', ['-r', filename])
@@ -87,42 +87,19 @@ app.get('/load', async (req, res) => {
   await downloader.download()
 
   console.log('converting to pngs')
-  const data =  await convertToPng(filename)
+  const data =  await convertToPng(`./downloads/${filename}`, filename)
 
   res.send(j2e(data))
   console.log('files information sent to client')
 })
 
 // for uploading local PDF file
-app.post('/upload', upload.single('pdf'), (req, res, next) => {
+app.post('/upload', upload.single('pdf'), async (req, res, next) => {
   const filename = req.file.filename
+  const data = await convertToPng(req.file.path, filename)
 
-  // create working directory
-  fs.mkdirSync('img/' + filename)
-
-  // spawn pdftoppm process to convert pdf to png
-  const pdftoppm = spawn('pdftoppm', [req.file.path, `./img/${filename}/out`, '-png'])
-
-  pdftoppm.on('close', (code) => {
-
-    console.log('pdftoppm process closed')
-
-    const files = fs.readdirSync('img/' + filename)
-
-    // return file information used for download
-    res.send(j2e({
-      pageCount: files.length,
-      path: filename,
-      files
-    }))
-
-    console.log('files infortmation sent to client, cleaning up...')
-    // remove uploaded file
-    spawn('rm', [req.file.path])
-
-    // remove converted files
-    //spawn('rm', ['-r', filename])
-  })
+  res.send(j2e(data))
+  return
 })
 
 app.get('/clear', (req, res) => {
