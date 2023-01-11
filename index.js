@@ -4,7 +4,7 @@ const app = express()
 const fs = require('fs')
 const multer = require('multer')
 const path = require('path')
-const {spawn} = require('node:child_process')
+const {spawn} = require('child_process')
 const Downloader = require('nodejs-file-downloader')
 const j2e = require('json2emap')
 
