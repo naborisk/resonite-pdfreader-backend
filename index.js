@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 })
 
 const convertToPng = (path, filename) => {
-  fs.mkdirSync('img/' + filename)
+  fs.mkdirSync('img/' + filename, {recursive: true})
   const pdftoppm = spawn('pdftoppm', [path, `./img/${filename}/out`, '-png'])
 
   return new Promise((resolve, reject) => {
