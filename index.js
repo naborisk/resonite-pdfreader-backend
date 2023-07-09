@@ -102,8 +102,30 @@ app.post('/upload', upload.single('pdf'), async (req, res, next) => {
   return
 })
 
+app.get('/delete', (req, res) => {
+  if(!req.query.id) {
+    res.send('no id provided')
+    return
+  }
+
+  const id = req.query.id
+
+
+  if(!fs.existsSync(`./img/${id}`)) {
+    res.send(`pdf of id ${id} not found`)
+    return
+  } else {
+    const rm = spawn('rm', ['-r', `./img/${id}`], {shell: true})
+
+    rm.on('close', code => {
+      res.send(`pdf of id ${id} deleted`)
+    })
+  }
+})
+
 app.get('/clear', (req, res) => {
   const rm = spawn('rm', ['-r', './img/*'], {shell: true})
+
   rm.on('close', code => {
     res.send('img cleared')
   })
