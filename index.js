@@ -10,7 +10,7 @@ const j2e = require('json2emap')
 
 const upload = multer({dest: 'uploads/'})
 
-const port = 3000
+const port = process.env.PORT || 3000
 
 app.use('/img', express.static('img', {
   setHeaders: (res, filename, filestats) => {
