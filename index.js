@@ -21,7 +21,7 @@ app.use('/img', express.static('img', {
 }))
 
 app.get('/', (req, res) => {
-  res.send('up!')
+  res.send('application is running!')
 })
 
 const convertToPng = (path, filename) => {
