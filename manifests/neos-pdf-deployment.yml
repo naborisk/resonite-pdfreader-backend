@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: neos-pdf
   name: neos-pdf
   labels:
     app: neos-pdf
