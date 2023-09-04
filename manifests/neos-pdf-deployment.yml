@@ -16,5 +16,6 @@ spec:
       containers:
         - name: neos-pdf-deployment
           image: ghcr.io/naborisk/neos-pdfreader-backend:main
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
