@@ -4,6 +4,8 @@ metadata:
   name: neos-pdf
   labels:
     app: neos-pdf
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: ghcr.io/naborisk/neos-pdfreader-backend:main
 spec:
   selector:
     matchLabels:
