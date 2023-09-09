@@ -7,7 +7,6 @@ metadata:
   annotations:
     argocd-image-updater.argoproj.io/image-list: ghcr.io/naborisk/neos-pdfreader-backend:main
 spec:
-  replicas: 3
   selector:
     matchLabels:
       app: neos-pdf
