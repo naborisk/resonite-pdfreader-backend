@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
     .execSync('git rev-parse --short HEAD')
     .toString()
     .trim()
-  res.send('rev: ' + revision)
+  res.send('application running on revision: ' + revision)
 })
 
 const convertToPng = (path, filename) => {
