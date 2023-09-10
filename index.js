@@ -29,7 +29,19 @@ app.get('/', (req, res) => {
     .execSync('git rev-parse --short HEAD')
     .toString()
     .trim()
-  res.send('application running on rev: ' + revision)
+
+  const commitDate = child_process
+    .execSync('git log -1 --format=%cd')
+    .toString()
+    .trim()
+
+  res.send(`app is running!<br>
+            usage: <br>
+            &nbsp;/load?url=pdf_url<br>
+            &nbsp;/img/[id]/out-[page_no].png<br>
+            <br>
+            commit:  ${revision}<br>
+            commit date: ${commitDate}`)
 })
 
 const convertToPng = (path, filename) => {
