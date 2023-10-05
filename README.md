@@ -1,4 +1,4 @@
-# Resonite PDF Reader Backend [WIP]
+# Resonite PDF Reader Backend
 This is a backend server designed to be used with a PDF reader I created in the [Resonite Metaverse](https://resonite.com/).
 The server takes a url of a PDF (or a file), converts it to PNG, and serve it to the PDF reader.
 
